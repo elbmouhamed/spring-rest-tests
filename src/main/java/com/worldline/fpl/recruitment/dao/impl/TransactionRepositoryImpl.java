@@ -22,8 +22,7 @@ import com.worldline.fpl.recruitment.entity.Transaction;
  *
  */
 @Repository
-public class TransactionRepositoryImpl implements TransactionRepository,
-		InitializingBean {
+public class TransactionRepositoryImpl implements TransactionRepository, InitializingBean {
 
 	private List<Transaction> transactions;
 
@@ -57,21 +56,21 @@ public class TransactionRepositoryImpl implements TransactionRepository,
 	}
 
 	@Override
-	public Page<Transaction> getTransactionsByAccount(String accountId,
-			Pageable p) {
-		return new PageImpl<Transaction>(transactions.stream()
-				.filter(t -> t.getAccountId().equals(accountId))
-				.collect(Collectors.toList()));
+	public Page<Transaction> getTransactionsByAccount(String accountId, Pageable p) {
+		return new PageImpl<Transaction>(
+				transactions.stream().filter(t -> t.getAccountId().equals(accountId)).collect(Collectors.toList()));
 	}
 
 	@Override
-	public Boolean deleteTransactionsById(String transactionId) {
+	public Boolean deleteTransactionsById(String transactionId, String accountId) {
 		return transactions.removeIf(item -> {
-			    if (StringUtils.pathEquals(transactionId, item.getId()))
-			    	return true;
-			    return false;});
+			if (StringUtils.pathEquals(transactionId, item.getId())
+					&& StringUtils.pathEquals(accountId, item.getAccountId()))
+				return true;
+			return false;
+		});
 	}
-	
+
 	@Override
 	public boolean exists(String transactionId) {
 		return transactions.stream().anyMatch(a -> a.getId().equals(transactionId));
@@ -79,11 +78,30 @@ public class TransactionRepositoryImpl implements TransactionRepository,
 
 	@Override
 	public boolean deleteAllTransactionsByAccount(String accountId) {
-		System.out.println("==========> delete transaction");
 		return transactions.removeIf(item -> {
-		    if (StringUtils.pathEquals(accountId, item.getAccountId()))
-		    	return true;
-		    return false;});
+			if (StringUtils.pathEquals(accountId, item.getAccountId()))
+				return true;
+			return false;
+		});
+	}
+
+	@Override
+	public Transaction addTransaction(Transaction transaction) {
+		transactions.add(transaction);
+
+		return transaction;
+	}
+
+	@Override
+	public Transaction UpdateTransaction(Transaction transaction) {
+		transactions.stream().forEach(t -> {
+			if (StringUtils.pathEquals(transaction.getAccountId(), t.getAccountId())
+					&& StringUtils.pathEquals(transaction.getId(), t.getId())) {
+				t.setBalance(transaction.getBalance());
+				t.setNumber(transaction.getNumber());
+			}
+		});
+		return null;
 	}
 
 }

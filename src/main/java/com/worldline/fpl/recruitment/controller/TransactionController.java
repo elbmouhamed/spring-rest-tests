@@ -6,9 +6,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.worldline.fpl.recruitment.entity.Transaction;
 import com.worldline.fpl.recruitment.json.ErrorResponse;
 import com.worldline.fpl.recruitment.json.TransactionResponse;
 
@@ -51,11 +53,30 @@ public interface TransactionController {
 	 *            the entity transaction
 	 */
 	@RequestMapping(value = "/{transactionId}", method = RequestMethod.DELETE)
-	Boolean deleteTransactionsById(@PathVariable("transactionId") String transactionId);
+	Boolean deleteTransactionsById(@PathVariable("transactionId") String transactionId, 
+			@PathVariable("accountId") String accountId);
 	
 	/**
 	 * Delete All transaction By AccountID
 	 */
 	@RequestMapping(value = "/removeAll", method = RequestMethod.DELETE)
 	public Boolean deleteAllTransactionsByAccount(@PathVariable("accountId") String accountId);
+	
+	/**
+	 * Create new transaction 
+	 * 
+	 * @param transaction
+	 *            the entity transaction to add
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public Transaction addTransaction(@RequestBody Transaction transaction);
+	
+	/**
+	 * Update existing transaction
+	 * @param transaction
+	 *            the object transaction
+	 * @return the updated transaction
+	 */
+	@RequestMapping(value = "", method = RequestMethod.PUT)
+	Transaction UpdateTransaction(@RequestBody Transaction transaction);
 }

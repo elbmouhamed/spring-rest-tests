@@ -7,9 +7,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.worldline.fpl.recruitment.controller.TransactionController;
+import com.worldline.fpl.recruitment.entity.Transaction;
 import com.worldline.fpl.recruitment.json.TransactionResponse;
 import com.worldline.fpl.recruitment.service.TransactionService;
 
@@ -46,8 +48,9 @@ public class TransactionControllerImpl implements TransactionController {
 	}
 
 	@Override
-	public Boolean deleteTransactionsById(@PathVariable("transactionId") String transactionId) {
-		Boolean result = transactionService.deleteTransactionsById(transactionId);
+	public Boolean deleteTransactionsById(@PathVariable("transactionId") String transactionId, 
+			@PathVariable("accountId") String accountId) {
+		Boolean result = transactionService.deleteTransactionsById(transactionId, accountId);
 		if(!result) {
 			log.debug("Cannot find transaction for id ", transactionId);
 		}
@@ -61,5 +64,15 @@ public class TransactionControllerImpl implements TransactionController {
 			log.debug("Cannot find account ", accountId);
 		}
 		return result;
+	}
+
+	@Override
+	public Transaction addTransaction(@RequestBody Transaction transaction) {
+		return transactionService.addTransaction(transaction);
+	}
+
+	@Override
+	public Transaction UpdateTransaction(@RequestBody Transaction transaction) {
+		return transactionService.UpdateTransaction(transaction);
 	}
 }

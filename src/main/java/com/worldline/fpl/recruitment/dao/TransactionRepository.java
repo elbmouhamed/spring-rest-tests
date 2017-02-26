@@ -30,7 +30,7 @@ public interface TransactionRepository {
 	 * @param transactionId
 	 *            the id of transaction
 	 */
-	Boolean deleteTransactionsById(String transactionId);
+	Boolean deleteTransactionsById(String transactionId, String accountId);
 	
 	/**
 	 * Check if a transaction exists in the liste
@@ -45,4 +45,20 @@ public interface TransactionRepository {
 	 * delete all transaction
 	 */
 	boolean deleteAllTransactionsByAccount(String accountId);
+	
+	/**
+	 * Add new transaction
+	 * @param transaction
+	 *            the object transaction
+	 * @return the saved transaction
+	 */
+	Transaction addTransaction(Transaction transaction);
+	
+	/**
+	 * Update existing transaction
+	 * @param transaction
+	 *            the object transaction
+	 * @return the updated transaction
+	 */
+	Transaction UpdateTransaction(Transaction transaction);
 }

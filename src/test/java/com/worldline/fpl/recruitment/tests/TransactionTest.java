@@ -48,4 +48,5 @@ public class TransactionTest extends AbstractTest {
 		
 		mockMvc.perform(get("/accounts/1/transactions")).andExpect(status().isNoContent());
 	}
+	
 }

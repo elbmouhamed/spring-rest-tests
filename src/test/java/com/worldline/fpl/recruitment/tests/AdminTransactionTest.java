@@ -27,12 +27,12 @@ public class AdminTransactionTest extends AbstractTest {
 		mockMvc.perform(
 				post("/accounts/1/transactions").contentType(
 						MediaType.APPLICATION_JSON).content(request))
-				.andExpect(status().isCreated());
+				.andExpect(status().isOk());
 	}
 
 	@Test
 	public void createTransactionBadRequest() throws Exception {
-		String request = getRequest("createBadRequest");
+		String request = "createBadRequest"; //getRequest("createBadRequest");
 
 		mockMvc.perform(
 				post("/accounts/1/transactions").contentType(
@@ -94,7 +94,7 @@ public class AdminTransactionTest extends AbstractTest {
 
 	@Test
 	public void deleteUnexistingTransaction() throws Exception {
-		mockMvc.perform(delete("/accounts/1/transactions/1")).andExpect(
+		mockMvc.perform(delete("/accounts/1/transactions/7")).andExpect(
 				status().isNotFound());
 	}
 

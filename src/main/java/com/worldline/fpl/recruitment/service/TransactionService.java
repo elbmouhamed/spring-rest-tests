@@ -68,12 +68,16 @@ public class TransactionService {
 		return result;
 	}
 	
-	public Boolean deleteTransactionsById(String transactionId) {
+	public Boolean deleteTransactionsById(String transactionId, String accountId ) {
+		if (!accountService.isAccountExist(accountId)) {
+			throw new ServiceException(ErrorCode.INVALID_ACCOUNT,
+					"Account doesn't exist");
+		}
 		if(!transactionRepository.exists(transactionId))
 			throw new ServiceException(ErrorCode.INVALID_ACCOUNT,
 					"Transaction not existe");
 			
-		return transactionRepository.deleteTransactionsById(transactionId);
+		return transactionRepository.deleteTransactionsById(transactionId, accountId);
 		
 	}
 	
@@ -84,6 +88,25 @@ public class TransactionService {
 		}
 			
 		return transactionRepository.deleteAllTransactionsByAccount(accountId);
+	}
+	
+	public Transaction addTransaction(Transaction transaction){
+		if (!accountService.isAccountExist(transaction.getAccountId())) {
+			throw new ServiceException(ErrorCode.INVALID_ACCOUNT,
+					"Account doesn't exist");
+		}
+		return transactionRepository.addTransaction(transaction);
+	}
+	
+	public Transaction UpdateTransaction(Transaction transaction) {
+		if (!accountService.isAccountExist(transaction.getAccountId())) {
+			throw new ServiceException(ErrorCode.INVALID_ACCOUNT,
+					"Account doesn't exist");
+		}
+		if(!transactionRepository.exists(transaction.getId()))
+			throw new ServiceException(ErrorCode.INVALID_ACCOUNT,
+					"Transaction not existe");
+		return transactionRepository.UpdateTransaction(transaction);
 	}
 
 }
