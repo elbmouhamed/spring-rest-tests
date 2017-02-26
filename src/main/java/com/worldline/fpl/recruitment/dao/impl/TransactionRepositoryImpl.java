@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.worldline.fpl.recruitment.dao.TransactionRepository;
 import com.worldline.fpl.recruitment.entity.Transaction;
@@ -61,6 +62,28 @@ public class TransactionRepositoryImpl implements TransactionRepository,
 		return new PageImpl<Transaction>(transactions.stream()
 				.filter(t -> t.getAccountId().equals(accountId))
 				.collect(Collectors.toList()));
+	}
+
+	@Override
+	public Boolean deleteTransactionsById(String transactionId) {
+		return transactions.removeIf(item -> {
+			    if (StringUtils.pathEquals(transactionId, item.getId()))
+			    	return true;
+			    return false;});
+	}
+	
+	@Override
+	public boolean exists(String transactionId) {
+		return transactions.stream().anyMatch(a -> a.getId().equals(transactionId));
+	}
+
+	@Override
+	public boolean deleteAllTransactionsByAccount(String accountId) {
+		System.out.println("==========> delete transaction");
+		return transactions.removeIf(item -> {
+		    if (StringUtils.pathEquals(accountId, item.getAccountId()))
+		    	return true;
+		    return false;});
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.worldline.fpl.recruitment.tests;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,23 +18,34 @@ public class TransactionTest extends AbstractTest {
 
 	@Test
 	public void getTransactions() throws Exception {
-		mockMvc.perform(get("/accounts/1/transactions"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.totalElements", is(3)))
+		mockMvc.perform(get("/accounts/1/transactions")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.totalElements", is(2)))
 				.andExpect(jsonPath("$.content[0].number", is("12151885120")))
 				.andExpect(jsonPath("$.content[0].balance", is(42.12)));
 	}
 
 	@Test
 	public void getTransactionsNoContent() throws Exception {
-		mockMvc.perform(get("/accounts/2/transactions")).andExpect(
-				status().isNoContent());
+		mockMvc.perform(get("/accounts/2/transactions")).andExpect(status().isNoContent());
 	}
 
 	@Test
 	public void getTransactionsOnUnexistingAccount() throws Exception {
-		mockMvc.perform(get("/accounts/3/transactions"))
-				.andExpect(status().isNotFound())
+		mockMvc.perform(get("/accounts/3/transactions")).andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.errorCode", is("INVALID_ACCOUNT")));
+	}
+
+	@Test
+	public void deleteTransaction() throws Exception {
+		mockMvc.perform(delete("/accounts/1/transactions/3"))
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void deleteAllTransaction() throws Exception {
+		mockMvc.perform(delete("/accounts/1/transactions/removeAll"))
+		.andExpect(status().isOk());
+		
+		mockMvc.perform(get("/accounts/1/transactions")).andExpect(status().isNoContent());
 	}
 }

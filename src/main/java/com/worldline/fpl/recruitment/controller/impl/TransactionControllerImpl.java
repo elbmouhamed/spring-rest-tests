@@ -1,7 +1,5 @@
 package com.worldline.fpl.recruitment.controller.impl;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.worldline.fpl.recruitment.controller.TransactionController;
 import com.worldline.fpl.recruitment.json.TransactionResponse;
 import com.worldline.fpl.recruitment.service.TransactionService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of {@link TransactionController}
@@ -45,4 +45,21 @@ public class TransactionControllerImpl implements TransactionController {
 		return ResponseEntity.ok().body(page);
 	}
 
+	@Override
+	public Boolean deleteTransactionsById(@PathVariable("transactionId") String transactionId) {
+		Boolean result = transactionService.deleteTransactionsById(transactionId);
+		if(!result) {
+			log.debug("Cannot find transaction for id ", transactionId);
+		}
+		return result;
+	}
+	
+	@Override
+	public Boolean deleteAllTransactionsByAccount(@PathVariable("accountId") String accountId) {
+		Boolean result = transactionService.deleteAllTransactionsByAccount(accountId);
+		if(!result) {
+			log.debug("Cannot find account ", accountId);
+		}
+		return result;
+	}
 }
